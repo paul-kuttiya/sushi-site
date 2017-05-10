@@ -1,0 +1,24 @@
+include /_mixins.pug
+
+doctype html
+html(lang='en-US')
+  head
+    title Sushi Restaurant Website
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    +javascript_include('vendor/all', 'handlebars_templates')
+
+  body
+    include ./partials/header
+    main
+      #content
+        block content
+    
+    +javascript_include('app')
+    +javascript_include('models/item', 'models/cartItem')
+    +javascript_include('collections/items', 'collections/cartItems')
+    +javascript_include('views/index', 'views/itemDetails', 'views/cartItems', 'views/checkout')
+    script(type="text/javascript").
+      App.items = new Items(!{JSON.stringify(items)});
+      App.init();
+    +javascript_include('router')
+    block scripts

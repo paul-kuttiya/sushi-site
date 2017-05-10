@@ -1,0 +1,16 @@
+{{#each this}}
+  <li data-id={{id}}>
+    <article>
+      <header>
+        <figure>
+          <img src="images/{{image}}" alt="menu-item">
+        </figure>
+        <h2 class="name">{{name}}</h2>
+      </header>
+      <p class="price">${{price}}</p>
+      <footer data-id={{id}}>
+        <a href="#" class="add_cart">Add to cart</a>
+      </footer>
+    </article>
+  </li>
+{{/each}}
