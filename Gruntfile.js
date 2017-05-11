@@ -1,15 +1,24 @@
+var path = require('path');
+var src = path.join(__dirname, "public/javascripts"),
+    dist = path.join(__dirname, "public/dist");
+
 module.exports = function(grunt) {
   grunt.initConfig({
-    uglify: {
-      my_target: {
-        files: {
-          "public/javascripts/vendor/all.js": ["public/javascripts/vendor/all.js"],
-        }
-      }
+    concat: {
+      components: {
+        src: 
+        [
+          `${src}/app.js`,
+          `${src}/models/item.js`, `${src}/models/cartItem.js`,
+          `${src}/collections/items.js`, `${src}/collections/cartItems.js`,
+          `${src}/views/index.js`, `${src}/views/itemDetails.js`, `${src}/views/cartItems.js`, `${src}/views/checkout.js`
+        ],
+        dest: `${dist}/components.js`,
+      },
     },
     bower_concat: {
       all: {
-        dest: "public/javascripts/vendor/all.js",
+        dest: `${dist}/lib.js`,
         dependencies: {
           //underscore with jquery as dependencies
           "underscore": "jquery",
@@ -27,18 +36,29 @@ module.exports = function(grunt) {
           processName: extractFileName,          
         }
       }
-    }
+    },
+    uglify: {
+      my_target: {
+        files: {
+          "public/dist/lib.min.js": [`${dist}/lib.js`],
+          "public/dist/components.min.js": [`${dist}/components.js`],
+          "public/dist/router.min.js": [`${src}/router.js`],
+          "public/dist/handlebars_templates.min.js": [`${src}/handlebars_templates.js`],
+        }
+      }
+    },
   });
 
   [
     "grunt-bower-concat",
+    'grunt-contrib-concat',
     "grunt-contrib-uglify",
     "grunt-contrib-handlebars"
   ].forEach(function(task) {
     grunt.loadNpmTasks(task);
   });
 
-  grunt.registerTask("default", ["bower_concat", "uglify"])
+  grunt.registerTask("default", ['concat', "bower_concat", "uglify"])
 };
 
 function removeWhitespace(template) {

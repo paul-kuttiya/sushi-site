@@ -49,7 +49,7 @@ this["JST"]["checkout"] = Handlebars.template({"1":function(container,depth0,hel
 
   return "<div class=\"img_top\"></div><section>"
     + ((stack1 = (helpers.If_order || (depth0 && depth0.If_order) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"If_order","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "")
-    + "<footer><a href=\"/\">Cancel order</a><form action=\"/\" method=\"get\"><input type=\"submit\" value=\"ORDER NOW!\"></form></footer></section><div class=\"img_bottom\"></div>";
+    + "<footer><a href=\"/\">Cancel order</a><form action=\"/\" method=\"post\"><input type=\"submit\" value=\"ORDER NOW!\"></form></footer></section><div class=\"img_bottom\"></div>";
 },"useData":true});
 
 this["JST"]["index"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
