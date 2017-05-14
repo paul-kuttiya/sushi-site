@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         {{#each this}}
-          <tr data-id="1">
+          <tr data-id="{{id}}">
             <td><img src="/images/{{image}}" alt="cart-item"></td>
             <td>{{name}}</td>
             <td>
@@ -25,7 +25,7 @@
                 <i class="fa fa-plus" aria-hidden="true"></i>
               </span>
             </td>
-            <td>${{price}}</td>
+            <td>${{fixed price}}</td>
           </tr>
         {{/each}}
       </tbody>

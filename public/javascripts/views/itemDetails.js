@@ -14,7 +14,6 @@ var DetailView = Backbone.View.extend({
     e.stopPropagation();
 
     var id = this.getId();
-    console.log(id)
     App.trigger('add_to_cart', id)
   },
   nextItem: function(e) {

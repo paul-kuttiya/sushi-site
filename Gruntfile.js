@@ -1,6 +1,7 @@
 var path = require('path');
 var src = path.join(__dirname, "public/javascripts"),
-    dist = path.join(__dirname, "public/dist");
+    dist = path.join(__dirname, "public/dist"),
+    css = path.join(__dirname, "public/stylesheet");
 
 module.exports = function(grunt) {
   grunt.initConfig({
@@ -47,18 +48,39 @@ module.exports = function(grunt) {
         }
       }
     },
+    cssmin: {
+      minify: {
+        files: [{
+          expand: true,
+          cwd: 'public/stylesheets',
+          src: ['**/*.css', '!**/*.min.css'],
+          dest: `${dist}`,
+          ext: '.min.css'
+        }]
+      },
+      options: {
+        shorthandCompacting: false,
+        roundingPrecision: -1
+      },
+      combine: {
+        files: {
+          'dist/all.css': [`${css}/style.css`, `${css}/whitespace-reset-modified.css`]
+        }
+      }
+    } 
   });
 
   [
     "grunt-bower-concat",
     'grunt-contrib-concat',
     "grunt-contrib-uglify",
-    "grunt-contrib-handlebars"
+    "grunt-contrib-handlebars",
+    'grunt-contrib-cssmin'
   ].forEach(function(task) {
     grunt.loadNpmTasks(task);
   });
 
-  grunt.registerTask("default", ['concat', "bower_concat", "uglify"])
+  grunt.registerTask("default", ['concat', "bower_concat", "uglify", "cssmin"])
 };
 
 function removeWhitespace(template) {

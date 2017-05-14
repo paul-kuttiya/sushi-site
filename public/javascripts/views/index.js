@@ -10,7 +10,6 @@ var IndexView = Backbone.View.extend({
     e.stopPropagation();
     
     var id = this.findId(e);
-    console.log(id)
     App.trigger('add_to_cart', id)
   },
   findId: function(e) {

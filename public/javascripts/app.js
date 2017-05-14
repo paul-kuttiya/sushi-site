@@ -8,9 +8,56 @@ var App = {
     this.on('add_to_cart', this.addToCart.bind(this));
     this.on('empty_cart', this.emptyCart.bind(this));
     this.on('checkout', this.checkout.bind(this));
+    this.on('plus', this.plusItem.bind(this));
+    this.on('minus', this.minusItem.bind(this));
+    this.cart.on('change remove', this.updateStorage.bind(this))
+  },
+  updateStorage: function() {
+    this.setStorage('cart', this.cart);
+    this.setStorage('cart_display', this.cartDisplay);
+  },
+  updateDisplay: function(id, quantity) {
+    this.cartDisplay.forEach(function(item) {
+      if (item.id === id) {
+        item.quantity = quantity;
+      }
+    });
+
+    this.cartDisplay = this.cartDisplay.filter(function(item) {
+      return item.quantity > 0;
+    });
+
+    if (this.cartDisplay.length === 0) {
+      this.cartItemsView.remove();
+      this.totalCount(0)
+    }
+  },
+  plusItem: function(e) {
+    var id = $(e.target).closest('tr').data('id'),
+        model = this.cart.get(id),
+        quantity = model.toJSON().quantity + 1;
+
+    model.set({ quantity: quantity });
+    this.updateDisplay(id, quantity);
+    this.checkout();
+  },
+  minusItem: function(e) {
+    var id = $(e.target).closest('tr').data('id'),
+        model = this.cart.get(id),
+        quantity = model.toJSON().quantity - 1;
+
+    if (quantity > 0)  {
+      model.set({ quantity: quantity })
+    } else {
+      this.cart.remove(model);
+    }
+
+    this.updateDisplay(id, quantity);
+    this.checkout();
   },
   checkout: function() {
     this.showCartDisplay(this.cartDisplay);
+    this.updateStorage();
     this.showCheckoutView();
   },
   showCheckoutView: function() {
@@ -20,16 +67,21 @@ var App = {
   },
   emptyCart: function() {
     this.cart.reset();
-    this.resetCartDisplay();
+    this.cartDisplay = [];
     this.totalCount(0);
     this.emptyStorage();
+    router.navigate('/');
+    this.showIndexView().render();
   },
   emptyStorage: function() {
     localStorage.clear();
   },
-  resetCartDisplay: function() {
+  getCart: function() {
+    var cartItems = this.getStorage('cart');
+
+    this.cart = new CartItems(cartItems);
     this.cartDisplay = this.getStorage('cart_display');
-  },  
+  },
   checkCartDisplay: function(id, selected) {
     //pass by reference
     var cart = this.cartDisplay;
@@ -55,15 +107,13 @@ var App = {
   addToCart: function(id) {
     var model = this.items.toJSON()[id - 1],
         selected = this.cart.get(id),
-        cart;
+        cartDisplay, cartIems;
 
-    selected = this.checkCartItem(model, selected);
-    cart = this.checkCartDisplay(id, selected);
+    cartIems = this.checkCartItem(model, selected);
+    cartDisplay = this.checkCartDisplay(id, cartIems);
 
-    this.setStorage('cart', this.cart);
-    this.setStorage('cart_display', this.cartDisplay);
-
-    this.showCartDisplay(cart);
+    this.updateStorage();
+    this.showCartDisplay(cartDisplay);
   },
   setStorage: function(name, value) {
     localStorage.setItem(name, JSON.stringify(value));
@@ -73,7 +123,7 @@ var App = {
   },
   showCartDisplay: function(cart) {
     if (cart.length) {
-      new CartItemsView({
+      this.cartItemsView = new CartItemsView({
         collection: cart
       });
     }
@@ -98,10 +148,7 @@ var App = {
     this.$itemCount.text(count)
   },
   init: function() {
-    var cartItems = this.getStorage('cart');
-    
-    this.cart = new CartItems(cartItems);
-    this.resetCartDisplay();
+    this.getCart();
     this.bindEvents();
   }
 }
@@ -113,9 +160,9 @@ Handlebars.registerHelper('total', function(cart) {
     total += (item.quantity * item.price);
     count += item.quantity;
   });
-
+  
   App.totalCount(count);
-  return total;
+  return total.toFixed(2);
 });
 
 Handlebars.registerHelper('If_order', function(cart, options) {
@@ -124,4 +171,8 @@ Handlebars.registerHelper('If_order', function(cart, options) {
     return options.fn(this);
   }
   return options.inverse(this);
+});
+
+Handlebars.registerHelper('fixed', function(price) {
+  return price.toFixed(2);
 });

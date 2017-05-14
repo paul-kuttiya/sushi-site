@@ -1,4 +1,9 @@
-mixin javascript_include(src, ...rest)
+mixin javascript_dist(src, ...rest)
   script(type="text/javascript" src="/dist/" + src + '.js')
   each file in rest
     script(type="text/javascript" src="/dist/" + file + '.js')
+
+mixin javascript_include(src, ...rest)
+  script(type="text/javascript" src="/javascripts/" + src + '.js')
+  each file in rest
+    script(type="text/javascript" src="/javascripts/" + file + '.js')

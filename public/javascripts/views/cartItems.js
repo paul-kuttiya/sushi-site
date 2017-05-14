@@ -16,6 +16,7 @@ var CartItemsView = Backbone.View.extend({
   render: function() {
     //this.collection is array of JSON.
     this.$el.html(this.template(this.collection))
+    
     $('main #cart').remove();
     this.$el.insertBefore(App.$el);
   },

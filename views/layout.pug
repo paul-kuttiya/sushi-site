@@ -4,8 +4,11 @@ doctype html
 html(lang='en-US')
   head
     title Sushi Restaurant Website
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    +javascript_include('lib.min', 'handlebars_templates.min')
+    link(rel='stylesheet', href='/dist/style.min.css')
+    link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" 
+    rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+    crossorigin="anonymous")
+    +javascript_dist('lib.min', 'handlebars_templates.min')
 
   body
     include ./partials/header
@@ -13,7 +16,7 @@ html(lang='en-US')
       #content
         block content
     
-    +javascript_include('components.min')
+    +javascript_dist('components.min')
     //- +javascript_include('app')
     //- +javascript_include('models/item', 'models/cartItem')
     //- +javascript_include('collections/items', 'collections/cartItems')
@@ -21,5 +24,6 @@ html(lang='en-US')
     script(type="text/javascript").
       App.items = new Items(!{JSON.stringify(items)});
       App.init();
-    +javascript_include('router.min')
+    //- +javascript_include('router')
+    +javascript_dist('router.min')
     block scripts
