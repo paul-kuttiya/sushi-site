@@ -16,14 +16,14 @@ html(lang='en-US')
       #content
         block content
     
-    //- +javascript_dist('components.min')
-    +javascript_include('app')
-    +javascript_include('models/item', 'models/cartItem')
-    +javascript_include('collections/items', 'collections/cartItems')
-    +javascript_include('views/index', 'views/itemDetails', 'views/cartItems', 'views/checkout')
+    +javascript_dist('components.min')
+    //- +javascript_include('app')
+    //- +javascript_include('models/item', 'models/cartItem')
+    //- +javascript_include('collections/items', 'collections/cartItems')
+    //- +javascript_include('views/index', 'views/itemDetails', 'views/cartItems', 'views/checkout')
     script(type="text/javascript").
       App.items = new Items(!{JSON.stringify(items)});
       App.init();
-    +javascript_include('router')
-    //- +javascript_dist('router.min')
+    //- +javascript_include('router')
+    +javascript_dist('router.min')
     block scripts
