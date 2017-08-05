@@ -66,12 +66,12 @@ var App = {
     });
   },
   emptyCart: function() {
+    router.navigate('/');
     this.cart.reset();
     this.cartDisplay = [];
     this.totalCount(0);
     this.emptyStorage();
-    router.navigate('/');
-    this.showIndexView().render();
+    // this.showIndexView().render();
   },
   emptyStorage: function() {
     localStorage.clear();
